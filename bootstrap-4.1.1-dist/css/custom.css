@@ -29,30 +29,25 @@ p{
 	margin: 10px;
 }
 
-.box-project-heading{
+.box-project{
 	border: 1px #ccc solid; 
-	padding: 10px;
+
 	border-radius: 10px;
 	background: #fff;
 	cursor: pointer;
+} 
+
+.box-project-heading{
+	padding: 10px;
 }
 
 .box-project-heading:hover{
 	background-color: #ccc;
 }
 
-/*.arrow{
-	display: inline-block;
-	position: relative;
-}*/
-
 .box-project-techniques{
-	border: 1px #ccc solid;
-	border-radius: 10px;
-	background: #fff;
 	padding: 20px;
-	margin: 0;
-}
+} 
 
 .technique{
 	cursor: pointer;
