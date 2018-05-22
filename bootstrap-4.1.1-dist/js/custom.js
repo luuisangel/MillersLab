@@ -9,9 +9,13 @@ $(document).ready(function() {
 
 	// Handle technique click
 
-	$('.technique').click(function(){
-		
+	$('.box-project-heading').click(function(){
 		$(this).next(".results").slideToggle();
+		$(this).find('.fas').toggleClass('fa-arrow-up fa-arrow-down');
+		
+	});
 
+	$('.technique').click(function(){
+		$(this).next(".results").slideToggle();
 	});
 });
