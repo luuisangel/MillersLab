@@ -35,11 +35,7 @@ p{
 }
 
 .box-projects:hover{
-	/*background: #eee;*/
-}
-
-.results{
-	/*display: none;*/
+	background: #eee;
 }
 
 .results h5{
