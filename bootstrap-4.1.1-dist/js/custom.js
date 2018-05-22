@@ -1,12 +1,13 @@
-jQuery(document).ready(function() {
+$(document).ready(function() {
 
 	// Initially hide results for projects
-	jQuery("results").hide();
+	// $(".results").hide();
 
 	// Handle project click
-	jQuery(".box-projects h4").click(function(){
+	$('.box-projects h4').click(function(){
 
-		jQuery(this).next(".results").slideToggle();
+		
+		$(this).next(".results").slideToggle();
 
 	});
 });
