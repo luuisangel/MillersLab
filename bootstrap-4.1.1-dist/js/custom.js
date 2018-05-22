@@ -4,10 +4,9 @@ $(document).ready(function() {
 	// $(".results").hide();
 
 	// Handle project click
-	$('.box-projects h4').click(function(){
-
+	$('.box-project-heading').click(function(){
 		
-		$(this).next(".results").slideToggle();
+		$(this).next(".box-project-results").slideToggle();
 
 	});
 });
