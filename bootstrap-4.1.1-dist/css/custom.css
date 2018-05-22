@@ -17,7 +17,6 @@ body{
 	padding: 20px;
 	margin: 20px;
 	border-radius: 10px;
-	/*border: #333 solid;*/
 	width: 50%;
 }
 
@@ -27,8 +26,7 @@ p{
 
 .box-project{
 	padding: 0;
-	border-radius: 10px;
-	margin: 20px;
+	margin: 10px;
 }
 
 .box-project-heading{
@@ -39,10 +37,44 @@ p{
 	cursor: pointer;
 }
 
-.box-project-results{
+.box-project-heading:hover{
+	background-color: #ccc;
+}
+
+/*.arrow{
+	display: inline-block;
+	position: relative;
+}*/
+
+.box-project-techniques{
 	border: 1px #ccc solid;
 	border-radius: 10px;
 	background: #fff;
-	padding: 10px;
+	padding: 20px;
 	margin: 0;
 }
+
+.technique{
+	cursor: pointer;
+}
+
+.box-project-techniques li{
+	list-style-type: upper-alpha; 
+}
+
+.box-project-techniques li li{
+	list-style-type: none; 
+}
+
+ul.results{
+	columns: 2;
+	-webkit-columns: 2;
+	-moz-columns: 2;
+}
+
+ul.results img{
+	max-width: 100%;
+}
+
+
+
