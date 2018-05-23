@@ -12,10 +12,10 @@ $(document).ready(function() {
 	$('.box-project-heading').click(function(){
 		$(this).next(".results").slideToggle();
 		$(this).find('.fas').toggleClass('fa-caret-right fa-caret-down');
-		
 	});
 
 	$('.technique').click(function(){
 		$(this).next(".results").slideToggle();
+		$(this).find('.fas').toggleClass('fa-caret-right fa-caret-down');
 	});
 });
