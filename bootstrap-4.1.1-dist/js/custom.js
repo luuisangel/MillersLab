@@ -11,7 +11,7 @@ $(document).ready(function() {
 
 	$('.box-project-heading').click(function(){
 		$(this).next(".results").slideToggle();
-		$(this).find('.fas').toggleClass('fa-arrow-up fa-arrow-down');
+		$(this).find('.fas').toggleClass('fa-caret-right fa-caret-down');
 		
 	});
 

@@ -43,6 +43,7 @@ p{
 
 .box-project-heading:hover{
 	background-color: #ccc;
+	border-radius: 10px;
 }
 
 .box-project-techniques{
