@@ -90,14 +90,14 @@
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<div class="custom-file">
-  							<input type="file" class="custom-file-input" id="image">
+  							<input type="file" class="custom-file-input" name="image">
   							<label class="custom-file-label" for="image">Choose photo</label>
 						</div>
 					</div>
 				</div>
 				<div class="form-row">
 				    <div class="form-group col-md-4">
-				    	<select id="technique" class="form-control">
+				    	<select name="technique" class="form-control">
 					        <option selected>Choose technique</option>
 					        <option>Immuno</option>
 					        <option>Backfill</option>
@@ -106,14 +106,17 @@
 				</div>
 				<div class="form-row">
 				    <div class="form-group col-md-4">
-				    	<input type="date" id="date" class="form-control">
+				    	<input type="date" name="date" class="form-control">
 				    </div>
 				</div>
 				<button type="submit" class="btn btn-primary">Upload</button>
 			</form>
 		</div>
 		<pre>
-			<?php var_dump($_POST); ?>
+			<?php 
+				var_dump($_POST); 
+				var_dump($_FILES);
+			?>
 		</pre>
 	</div> <!-- end container -->
 
