@@ -86,7 +86,7 @@
 	<div class="container">
 		<div class="form-box">
 			<h2>Upload your results</h2>
-			<form>
+			<form method="post" action="manage_data.php" enctype="multipart/form-data">
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<div class="custom-file">
