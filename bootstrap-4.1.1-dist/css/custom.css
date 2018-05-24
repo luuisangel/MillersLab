@@ -43,14 +43,10 @@ p{
 .box-project{
 	padding: 0;
 	margin: 10px;
-}
-
-.box-project{
 	border: 1px #ccc solid; 
-
 	border-radius: 10px;
 	background: #fff;
-} 
+}
 
 .box-project-heading{
 	padding: 10px;
