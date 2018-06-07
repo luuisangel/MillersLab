@@ -1,10 +1,29 @@
+<?php
+	
+	$db_username = "luis_quinones21";
+	$db_password = "801156424";
+	$db_hostname = "localhost";
+	$db_database = "luis_quinones21";
+
+	mysqli_report(MYSQLI_REPORT_STRICT);
+
+	try 
+	{
+		$dbconnection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database) or $error = 1;
+	}
+	catch(Exception $ex) 
+	{
+		die("Failed to connect to database: " . $ex->getMessage());
+	}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Welcome to Miller's Lab Database</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="bootstrap-4.1.1-dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">ˀ
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href=" bootstrap-4.1.1-dist/css/custom.css">
 </head>
 
@@ -41,38 +60,18 @@
 
 	<!-- Content -->
 	<div class="container">
-		<div class="box-project">
-			<div class="box-project-heading">
-				<h4><span class="fas fa-caret-right"></span> Pedalpeptide-4 (Juan del Pueblo)</h4>
-			</div>
-			<div class="box-project-techniques" style="display: none">
-				<h5>Results</h5>
-				<ul>
-					<li>
-						<div class="technique">
-							<h5><span class="fas fa-caret-right"></span> Immuno</h5>
-						</div>
-						<ul class="results" style="display: none">
-							<li> Picture 1 </li>
-							<li> Picture 2 </li>
-						</ul>
-					</li>
-					<li>
-						<div class="technique">
-							<h5><span class="fas fa-caret-right"></span> Backfill</h5>
-						</div>
-						<ul class="results" style="display: none">
-							<li> Picture 1 </li>
-							<li> Picture 2 </li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div> <!-- end box-project-->
 
+	<?php
+
+	$requestProjects = sprintf("select pid,pname from Projects");
+	$projects = mysqli_query($dbconnection, $requestProjects);
+
+	while($project = mysqli_fetch_array($projects,MYSQL_ASSOC))
+	{	
+		?>
 		<div class="box-project">
 			<div class="box-project-heading">
-				<h4><span class="fas fa-caret-right"></span> Biomphalaria (Fefa Robles)</h4>
+				<h4><span class="fas fa-caret-right"></span> <?php print $project['pname'] ?></h4>
 			</div>
 			<div class="box-project-techniques" style="display: none">
 				<h5>Results</h5>
@@ -82,8 +81,12 @@
 							<h5><span class="fas fa-caret-right"></span> Immuno</h5>
 						</div>
 						<ul class="results" style="display: none">
-							<li><img src="images/ccomlogo.png"></li>
-							<li><img src="images/fsharp256.png"></li>
+						<?php
+						$requestResults = sprintf("select path from Results where technique='Immuno' and pid=%s",$project['pid']);
+						$results = mysqli_query($dbconnection, $requestResults);
+						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
+							<li><img src="<?php print $result['path']?>"></li>
+						<?php } ?>
 						</ul>
 					</li>
 					<li>
@@ -91,13 +94,18 @@
 							<h5><span class="fas fa-caret-right"></span> Backfill</h5>
 						</div>
 						<ul class="results" style="display: none">
-							<li> Picture 1 </li>
-							<li> Picture 2 </li>
+						<?php
+						$requestResults = sprintf("select path from Results where technique='Backfill' and pid=%s", $project['pid']);
+						$results = mysqli_query($dbconnection, $requestResults);
+						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
+							<li><img src="<?php print $result['path']?>"></li>
+						<?php } ?>
 						</ul>
 					</li>
 				</ul>
 			</div>
 		</div> <!-- end box-project -->
+	<?php } ?>				
 	</div> <!-- end container -->
 
 	<!-- Footer -->

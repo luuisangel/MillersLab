@@ -1,44 +1,64 @@
 <?php
+	
+	$db_username = "luis_quinones21";
+	$db_password = "801156424";
+	$db_hostname = "localhost";
+	$db_database = "luis_quinones21";
+
+	mysqli_report(MYSQLI_REPORT_STRICT);
+
+	try 
+	{
+		$dbconnection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database) or $error = 1;
+	}
+	catch(Exception $ex) 
+	{
+		die("Failed to connect to database: " . $ex->getMessage());
+	}
 
 	// Handle upload click
 	if (isset($_POST['upload'])){
 
 		$target = "images/".basename($_FILES['image']['name']);
 
-		$db_username = "root";
-		$db_password = "Luisthebezt1";
-		$db_hostname = "localhost";
-		$db_database = "MillersLab";
+	
+		$image = $_FILES['image']['name'];
+		$technique = $_POST['technique'];
+		$date = $_POST['date'];
+		$sname = $_POST['student-name'];
 
-		mysqli_report(MYSQLI_REPORT_STRICT);
+		$request = sprintf("select sid from Students where sname=%s",$sname);
+		$response = mysqli_query($dbconnection, $request);
 
-		try 
-		{
-			$dbconnection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database) or $error = 1;
-			$image = $_FILES['image']['name'];
-			$technique = $_POST['technique'];
-			$date = $_POST['date'];
+		$rowSid = mysqli_fetch_array($response,MYSQL_ASSOC);
+		$sid = $rowSid['sid'];
 
-			echo "<h1>".$technique."</h1>";
-			echo "<h1>".$date."</h1>";
+		$request = sprintf("select aid from Antibodies where aname=%s",$aname);
+		$response = mysqli_query($dbconnection, $request);
 
-			$sql = "insert into ResultsPhotos (photo,date) values ('$image','$date')";
+		$rowAid = mysqli_fetch_array($response,MYSQL_ASSOC);
+		$aid = $rowAid['aid'];
 
-			mysqli_query($dbconnection,$sql);
+		$request = sprintf("select pid from Antibodies where aid=%s",$aid);
+		$response = mysqli_query($dbconnection, $request);
 
-			$msg = "";
-			if(move_uploaded_file($_FILES['image']['tmp_name'], $target)){
-				$msg = "Image uploaded succesfully.";
-			}
-			else{
-				$msg = "Image failed to upload.";
-			}
+		$rowPid = mysqli_fetch_array($response,MYSQL_ASSOC);
+		$pid = $rowPid['pid'];
+
+		$sql = sprintf("insert into ResultsPhotos (path,date) values ('$image','$date')");
+		$sql = sprintf("insert into Results values (%s,%s,%s,%s,%s)",$pid,$path,$aid,$sid,$technique);
+
+		mysqli_query($dbconnection,$sql);
+
+		$msg = "";
+		if(move_uploaded_file($_FILES['image']['tmp_name'], $target)){
+			$msg = "Image uploaded succesfully.";
 		}
-		catch(Exception $ex) 
-		{
-			die("Failed to connect to database: " . $ex->getMessage());
-		}	
+		else{
+			$msg = "Image failed to upload.";
+		}
 	}
+
 ?>
 
 <!DOCTYPE html>
@@ -90,14 +110,49 @@
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<div class="custom-file">
-  							<input type="file" class="custom-file-input" name="image">
+  							<input type="file" class="custom-file-input" id="image" name="image">
   							<label class="custom-file-label" for="image">Choose photo</label>
 						</div>
 					</div>
 				</div>
 				<div class="form-row">
 				    <div class="form-group col-md-4">
-				    	<select name="technique" class="form-control">
+				    	<label>Name</label>
+				    	<select id="student-name" name="student-name" class="form-control">
+					        <option selected>Name</option>
+					        <?php
+					        	$request = sprintf("select sname from Students");
+								$response = mysqli_query($dbconnection, $request);
+
+								while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
+								{	
+									print "<option>".$row['sname']."</option>";
+								}
+					        ?>
+				      	</select>
+				    </div>
+				<!-- </div> -->
+				<!-- <div class="form-row"> -->
+				    <div class="form-group col-md-4">
+				    	<label>Project</label>
+				    	<select id="project" name="project" class="form-control">
+					        <option selected>Choose antibody</option>
+					        <?php
+					        	$request = sprintf("select aname from Antibodies");
+								$response = mysqli_query($dbconnection, $request);
+
+								while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
+								{	
+									print "<option>".$row['aname']."</option>";
+								}
+					        ?>
+				      	</select>
+				    </div>
+				<!-- </div> -->
+				<!-- <div class="form-row"> -->
+				    <div class="form-group col-md-4">
+				    	<label>Technique</label>
+				    	<select id="technique" name="technique" class="form-control">
 					        <option selected>Choose technique</option>
 					        <option>Immuno</option>
 					        <option>Backfill</option>
@@ -106,18 +161,13 @@
 				</div>
 				<div class="form-row">
 				    <div class="form-group col-md-4">
+				    	<label>Date</label>
 				    	<input type="date" name="date" class="form-control">
 				    </div>
 				</div>
-				<button type="submit" class="btn btn-primary">Upload</button>
+				<button type="submit" name="upload" class="btn btn-primary">Upload</button>
 			</form>
 		</div>
-		<pre>
-			<?php 
-				var_dump($_POST); 
-				var_dump($_FILES);
-			?>
-		</pre>
 	</div> <!-- end container -->
 
 	<!-- Footer -->

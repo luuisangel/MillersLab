@@ -18,4 +18,5 @@ $(document).ready(function() {
 		$(this).next(".results").slideToggle();
 		$(this).find('.fas').toggleClass('fa-caret-right fa-caret-down');
 	});
+
 });
