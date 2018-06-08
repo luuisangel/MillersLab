@@ -125,14 +125,11 @@
 								$response = mysqli_query($dbconnection, $request);
 
 								while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
-								{	
-									print "<option>".$row['sname']."</option>";
-								}
-					        ?>
+									{	
+									?><option value="<?php print $row['sname'] ?>"><?php print $row['sname'] ?></option><?php ; ?>
+						  	  <?php } ?>
 				      	</select>
 				    </div>
-				<!-- </div> -->
-				<!-- <div class="form-row"> -->
 				    <div class="form-group col-md-4">
 				    	<label>Project</label>
 				    	<select id="project" name="project" class="form-control">
@@ -148,8 +145,6 @@
 					        ?>
 				      	</select>
 				    </div>
-				<!-- </div> -->
-				<!-- <div class="form-row"> -->
 				    <div class="form-group col-md-4">
 				    	<label>Technique</label>
 				    	<select id="technique" name="technique" class="form-control">
@@ -168,6 +163,7 @@
 				<button type="submit" name="upload" class="btn btn-primary">Upload</button>
 			</form>
 		</div> <!-- end upload results -->
+		
 		<!-- Edit section -->
 		<div class="form-box">
 			<h2>Edit your results</h2>
