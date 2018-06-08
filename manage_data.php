@@ -167,7 +167,56 @@
 				</div>
 				<button type="submit" name="upload" class="btn btn-primary">Upload</button>
 			</form>
+		</div> <!-- end upload results -->
+		<!-- Edit section -->
+		<div class="form-box">
+			<h2>Edit your results</h2>
+			<div class="form-group col-md-4">
+		    	<label>Name</label>
+		    	<select id="edit-student-name" name="edit-student-name" class="form-control">
+			        <option selected>Name</option>
+			        <?php
+			        	$request = sprintf("select sname from Students");
+						$response = mysqli_query($dbconnection, $request);
+
+						while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
+						{	
+							?><option value="<?php print $row['sname'] ?>"><?php print $row['sname'] ?></option><?php ; ?>
+				  <?php } ?>
+		      	</select>
+			</div>	
 		</div>
+		<div class="box-project-techniques" style="display: none">
+				<h5>Results</h5>
+				<ul>
+					<li>
+						<div class="technique">
+							<h5><span class="fas fa-caret-right"></span> Immuno</h5>
+						</div>
+						<ul class="results" style="display: none">
+						<?php
+						$requestResults = sprintf("select path from Results natural join Students where technique='Immuno' and sname=%s",$_POST['edit-student-name']);
+						$results = mysqli_query($dbconnection, $requestResults);
+						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
+							<li><img src="<?php print $result['path']?>"></li>
+						<?php } ?>
+						</ul>
+					</li>
+					<li>
+						<div class="technique">
+							<h5><span class="fas fa-caret-right"></span> Backfill</h5>
+						</div>
+						<ul class="results" style="display: none">
+						<?php
+						$requestResults = sprintf("select path from Results where technique='Backfill' and sname=%s", $_POST['edit-student-name']);
+						$results = mysqli_query($dbconnection, $requestResults);
+						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
+							<li><img src="<?php print $result['path']?>"></li>
+						<?php } ?>
+						</ul>
+					</li>
+				</ul>
+			</div> <!-- end edit results -->
 	</div> <!-- end container -->
 
 	<!-- Footer -->
