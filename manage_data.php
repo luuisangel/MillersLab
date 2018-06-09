@@ -186,6 +186,7 @@
 			</form>
 		</div>
 		<?php if($_POST['edit-student-name']){ ?>
+		<div class="box-project">
 		<div class="box-project-techniques">
 			<h5>Results</h5>
 			<ul>
@@ -217,6 +218,7 @@
 				</li>
 			</ul>
 		</div> <!-- end edit results -->
+		</div>
 	<?php } ?>
 	</div> <!-- end container -->
 
