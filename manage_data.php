@@ -26,27 +26,29 @@
 		$technique = $_POST['technique'];
 		$date = $_POST['date'];
 		$sname = $_POST['student-name'];
+		$pname = $_POST['project'];
 
-		$request = sprintf("select sid from Students where sname=%s",$sname);
+		$request = sprintf("select sid from Students where sname='%s'",$sname);
 		$response = mysqli_query($dbconnection, $request);
 
 		$rowSid = mysqli_fetch_array($response,MYSQL_ASSOC);
 		$sid = $rowSid['sid'];
 
-		$request = sprintf("select aid from Antibodies where aname=%s",$aname);
-		$response = mysqli_query($dbconnection, $request);
+		// $request = sprintf("select aid from Antibodies where aname=%s",$aname);
+		// $response = mysqli_query($dbconnection, $request);
 
-		$rowAid = mysqli_fetch_array($response,MYSQL_ASSOC);
-		$aid = $rowAid['aid'];
+		// $rowAid = mysqli_fetch_array($response,MYSQL_ASSOC);
+		// $aid = $rowAid['aid'];
 
-		$request = sprintf("select pid from Antibodies where aid=%s",$aid);
-		$response = mysqli_query($dbconnection, $request);
+		// $request = sprintf("select pid from Antibodies where aid=%s",$aid);
+		// $response = mysqli_query($dbconnection, $request);
 
+		$request = sprintf("select pid from Projects where pname='%s'",$pname);
 		$rowPid = mysqli_fetch_array($response,MYSQL_ASSOC);
 		$pid = $rowPid['pid'];
 
-		$sql = sprintf("insert into ResultsPhotos (path,date) values ('$image','$date')");
-		$sql = sprintf("insert into Results values (%s,%s,%s,%s,%s)",$pid,$path,$aid,$sid,$technique);
+		$sql = sprintf("insert into ResultsPhotos (path,date) values ('%s','%s')",$image,$date);
+		$sql = sprintf("insert into Results (pid,path,aid,sid,technique) values (%s,'%s','%s',%s,'%s')",$pid,$image,$sid,$technique);
 
 		mysqli_query($dbconnection,$sql);
 
@@ -133,14 +135,14 @@
 				    <div class="form-group col-md-4">
 				    	<label>Project</label>
 				    	<select id="project" name="project" class="form-control">
-					        <option selected>Choose antibody</option>
+					        <option selected>Choose project</option>
 					        <?php
-					        	$request = sprintf("select aname from Antibodies");
+					        	$request = sprintf("select pname from Projects");
 								$response = mysqli_query($dbconnection, $request);
 
 								while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
 								{	
-									print "<option>".$row['aname']."</option>";
+									print "<option>".$row['pname']."</option>";
 								}
 					        ?>
 				      	</select>
@@ -163,7 +165,7 @@
 				<button type="submit" name="upload" class="btn btn-primary">Upload</button>
 			</form>
 		</div> <!-- end upload results -->
-
+		<br>
 		<!-- Edit section -->
 		<div class="form-box">
 			<h2>Edit your results</h2>
@@ -181,11 +183,12 @@
 								?><option value="<?php print $row['sname'] ?>"><?php print $row['sname']; ?></option>
 					  <?php } ?>
 			      	</select>
+			      	<br>
 			      	<button type="submit" class="btn btn-primary">Load Results</button>
 				</div>	
 			</form>
 		</div>
-		<?php if($_POST['edit-student-name']){ ?>
+		<?php if(isset($_POST['edit-student-name'])){ ?>
 		<div class="box-project">
 		<div class="box-project-techniques">
 			<h5>Results</h5>
@@ -196,8 +199,9 @@
 					</div>
 					<ul class="results" style="display: none">
 					<?php
-					$requestResults = sprintf("select path from Results natural join Students where technique='Immuno' and sname=%s",$_POST['edit-student-name']);
+					$requestResults = sprintf("select path from Results natural join Students where technique='Immuno' and sname='%s'",$_POST['edit-student-name']);
 					$results = mysqli_query($dbconnection, $requestResults);
+					var_dump($results);
 					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
 						<li><img src="<?php print $result['path']?>"></li>
 					<?php } ?>
@@ -209,7 +213,7 @@
 					</div>
 					<ul class="results" style="display: none">
 					<?php
-					$requestResults = sprintf("select path from Results where technique='Backfill' and sname=%s", $_POST['edit-student-name']);
+					$requestResults = sprintf("select path from Results natural join Students where technique='Backfill' and sname='%s'", $_POST['edit-student-name']);
 					$results = mysqli_query($dbconnection, $requestResults);
 					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
 						<li><img src="<?php print $result['path']?>"></li>
