@@ -43,14 +43,14 @@
 			<li class="nav-item">
 		    	<a class="nav-link" href="#">Home</a>
 		  	</li>
-		  	<li class="nav-item">
+		  	<!-- <li class="nav-item">
 		 		<a class="nav-link" href="#">Profile</a>
-			</li>
+			</li> -->
 			<li class="nav-item">
 		    	<a class="nav-link" href="manage_data.php">Manage Data</a>
 			</li>
 			<li class="nav-item">
-		  		<a class="nav-link" href="manage_projects.html">Manage Projects</a>
+		  		<a class="nav-link" href="manage_projects.php">Manage Projects</a>
 			</li>
 			<li class="nav-item">
 		  		<a class="nav-link" href="#">Manage Students</a>
