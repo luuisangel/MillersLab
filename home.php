@@ -85,7 +85,7 @@
 						$requestResults = sprintf("select path from Results where technique='Immuno' and pid=%s",$project['pid']);
 						$results = mysqli_query($dbconnection, $requestResults);
 						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-							<li><img src="<?php print $result['path']?>"></li>
+							<li><img src="images/<?php print $result['path']?>"></li>
 						<?php } ?>
 						</ul>
 					</li>
@@ -98,7 +98,7 @@
 						$requestResults = sprintf("select path from Results where technique='Backfill' and pid=%s", $project['pid']);
 						$results = mysqli_query($dbconnection, $requestResults);
 						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-							<li><img src="<?php print $result['path']?>"></li>
+							<li><img src="images/<?php print $result['path']?>"></li>
 						<?php } ?>
 						</ul>
 					</li>

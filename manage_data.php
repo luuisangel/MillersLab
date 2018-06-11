@@ -27,6 +27,7 @@
 		$date = $_POST['date'];
 		$sname = $_POST['student-name'];
 		$pname = $_POST['project'];
+		$aid = $_POST['aid'];
 
 		$request = sprintf("select sid from Students where sname='%s'",$sname);
 		$response = mysqli_query($dbconnection, $request);
@@ -34,23 +35,20 @@
 		$rowSid = mysqli_fetch_array($response,MYSQL_ASSOC);
 		$sid = $rowSid['sid'];
 
-		// $request = sprintf("select aid from Antibodies where aname=%s",$aname);
-		// $response = mysqli_query($dbconnection, $request);
-
-		// $rowAid = mysqli_fetch_array($response,MYSQL_ASSOC);
-		// $aid = $rowAid['aid'];
-
-		// $request = sprintf("select pid from Antibodies where aid=%s",$aid);
-		// $response = mysqli_query($dbconnection, $request);
+		$request = sprintf("select pid from Antibodies where aid='%s'",$aid);
+		$response = mysqli_query($dbconnection, $request);
 
 		$request = sprintf("select pid from Projects where pname='%s'",$pname);
 		$rowPid = mysqli_fetch_array($response,MYSQL_ASSOC);
 		$pid = $rowPid['pid'];
 
-		$sql = sprintf("insert into ResultsPhotos (path,date) values ('%s','%s')",$image,$date);
-		$sql = sprintf("insert into Results (pid,path,aid,sid,technique) values (%s,'%s','%s',%s,'%s')",$pid,$image,$sid,$technique);
+		$insert = sprintf("insert into ResultsPhotos (path,date) values ('%s','%s')",$image,$date);
 
-		mysqli_query($dbconnection,$sql);
+		mysqli_query($dbconnection,$insert);
+
+		$insert = sprintf("insert into Results (pid,path,aid,sid,technique) values (%s,'%s','%s',%s,'%s')",$pid,$image,$aid,$sid,$technique);
+
+		mysqli_query($dbconnection,$insert);
 
 		$msg = "";
 		if(move_uploaded_file($_FILES['image']['tmp_name'], $target)){
@@ -147,6 +145,20 @@
 					        ?>
 				      	</select>
 				    </div>
+				     <div class="form-group col-md-4">
+				    	<label>Antibody</label>
+				    	<select id="aid" name="aid" class="form-control">
+					        <option selected>Antibody</option>
+					        <?php
+					        	$request = sprintf("select aid from Antibodies");
+								$response = mysqli_query($dbconnection, $request);
+
+								while($row = mysqli_fetch_array($response,MYSQL_ASSOC))
+									{	
+									?><option value="<?php print $row['aid'] ?>"><?php print $row['aid'] ?></option><?php ; ?>
+						  	  <?php } ?>
+				      	</select>
+				    </div>
 				    <div class="form-group col-md-4">
 				    	<label>Technique</label>
 				    	<select id="technique" name="technique" class="form-control">
@@ -201,9 +213,8 @@
 					<?php
 					$requestResults = sprintf("select path from Results natural join Students where technique='Immuno' and sname='%s'",$_POST['edit-student-name']);
 					$results = mysqli_query($dbconnection, $requestResults);
-					var_dump($results);
 					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-						<li><img src="<?php print $result['path']?>"></li>
+						<li><img src="images/<?php print $result['path']?>"></li>
 					<?php } ?>
 					</ul>
 				</li>
@@ -216,7 +227,7 @@
 					$requestResults = sprintf("select path from Results natural join Students where technique='Backfill' and sname='%s'", $_POST['edit-student-name']);
 					$results = mysqli_query($dbconnection, $requestResults);
 					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-						<li><img src="<?php print $result['path']?>"></li>
+						<li><img src="images/<?php print $result['path']?>"></li>
 					<?php } ?>
 					</ul>
 				</li>
