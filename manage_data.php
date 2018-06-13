@@ -37,8 +37,6 @@
 
 		$request = sprintf("select pid from Antibodies where aid='%s'",$aid);
 		$response = mysqli_query($dbconnection, $request);
-
-		$request = sprintf("select pid from Projects where pname='%s'",$pname);
 		$rowPid = mysqli_fetch_array($response,MYSQL_ASSOC);
 		$pid = $rowPid['pid'];
 
@@ -57,6 +55,37 @@
 		else{
 			$msg = "Image failed to upload.";
 		}
+	}
+
+	if(isset($_POST['rename-submit'])){
+		$oldname = $_POST['oldname'];
+		$newname = $_POST['rename'].".".$_POST['ext'];
+		$newpath = "images/".$newname;
+		$oldpath ="images/".$oldname;
+		echo $oldpath." to ".$newpath;
+		rename($oldpath,$newpath);
+
+		$update= sprintf("set FOREIGN_KEY_CHECKS=0"); 
+		mysqli_query($dbconnection,$update);
+		$update = sprintf("update Results set path='%s' where path='%s'",$newname,$oldname);
+		mysqli_query($dbconnection,$update);
+		$update = sprintf("update ResultsPhotos set path='%s' where path='%s'",$newname,$oldname);
+		mysqli_query($dbconnection,$update);
+		$update= sprintf("set FOREIGN_KEY_CHECKS=1"); 
+		mysqli_query($dbconnection,$update);
+
+	}
+
+	if(isset($_POST['delete'])){
+		unlink("images/".$_POST['delete']);
+		$delete = sprintf("set FOREIGN_KEY_CHECKS=0"); 
+		mysqli_query($dbconnection,$delete);
+		$delete = sprintf("delete from Results where path='%s'",$_POST['delete']);
+		mysqli_query($dbconnection,$delete); 
+		$delete = sprintf("delete from ResultsPhotos where path='%s'",$_POST['delete']);
+		mysqli_query($dbconnection,$delete); 
+		$delete= sprintf("set FOREIGN_KEY_CHECKS=1"); 
+		mysqli_query($dbconnection,$delete);
 	}
 
 ?>
@@ -163,8 +192,13 @@
 				    	<label>Technique</label>
 				    	<select id="technique" name="technique" class="form-control">
 					        <option selected>Choose technique</option>
-					        <option>Immuno</option>
-					        <option>Backfill</option>
+					        <?php
+							$requestTechniques = sprintf("select technique from Techniques");
+							$techniques = mysqli_query($dbconnection, $requestTechniques);
+							
+							while($technique = mysqli_fetch_array($techniques,MYSQL_ASSOC)){ ?>
+					        <option><?php print $technique['technique'] ?></option>
+					    <?php } ?>
 				      	</select>
 				    </div>
 				</div>
@@ -174,6 +208,7 @@
 				    	<input type="date" name="date" class="form-control">
 				    </div>
 				</div>
+				<br>
 				<button type="submit" name="upload" class="btn btn-primary">Upload</button>
 			</form>
 		</div> <!-- end upload results -->
@@ -205,32 +240,68 @@
 		<div class="box-project-techniques">
 			<h5>Results</h5>
 			<ul>
+				<?php
+				$requestTechniques = sprintf("select technique from Techniques");
+				$techniques = mysqli_query($dbconnection, $requestTechniques);
+				while($technique = mysqli_fetch_array($techniques,MYSQL_ASSOC)){ ?>
 				<li>
 					<div class="technique">
-						<h5><span class="fas fa-caret-right"></span> Immuno</h5>
+						<h5><span class="fas fa-caret-right"></span> <?php print $technique['technique'] ?></h5>
 					</div>
 					<ul class="results" style="display: none">
 					<?php
-					$requestResults = sprintf("select path from Results natural join Students where technique='Immuno' and sname='%s'",$_POST['edit-student-name']);
+					$requestResults = sprintf("select path from Results natural join Students where technique='%s' and sname='%s'",$technique['technique'],$_POST['edit-student-name']);
 					$results = mysqli_query($dbconnection, $requestResults);
 					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-						<li><img src="images/<?php print $result['path']?>"></li>
+						<li>
+							<figure>
+								<img src="images/<?php print $result['path']?>">
+								<figcaption>
+									<button type="button" name="rename-button" class="btn btn-primary" data-toggle="modal" data-target="#rename-modal">Rename</button>
+									<!-- Modal -->
+									<div class="modal fade" id="rename-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									  <div class="modal-dialog" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">Rename result: <?php print $result['path']?></h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									      <!-- rename form -->
+									     	<form method="post" action="manage_data.php" enctype="multipart/form-data">
+									     		<div class="input-group mb-3">
+												  <input type="text" class="form-control" id="rename" name="rename" placeholder="Describe your result..." aria-label="Describe your result" aria-describedby="extension">
+												  <div class="input-group-append">
+												    <span class="input-group-text" id="extension">.<?php 
+												    $ext = pathinfo($result['path'], PATHINFO_EXTENSION);
+												    echo $ext ;?></span>
+												  </div>
+												  <input type="hidden" name="ext" value="<?php echo $ext ?>"/>
+												  <input type="hidden" name="oldname" value="<?php echo $result['path'] ?>"/>
+												</div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									        <button type="submit" name="rename-submit" class="btn btn-primary">Save changes</button>
+									        <!-- </form> -->
+									        <!-- end rename form -->
+									      </div>
+									    </div>
+									  </div>
+									 </div>
+									</div>
+									<!-- end modal -->
+									<!-- <form method="post" action="manage_data.php" enctype="multipart/form-data"> -->
+									<button type="submit" name="delete" value="<?php echo $result['path'] ?>" class="btn btn-primary">Delete</button>
+									</form>
+								</figcaption>
+							</figure>
+						</li>
 					<?php } ?>
 					</ul>
 				</li>
-				<li>
-					<div class="technique">
-						<h5><span class="fas fa-caret-right"></span> Backfill</h5>
-					</div>
-					<ul class="results" style="display: none">
-					<?php
-					$requestResults = sprintf("select path from Results natural join Students where technique='Backfill' and sname='%s'", $_POST['edit-student-name']);
-					$results = mysqli_query($dbconnection, $requestResults);
-					while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-						<li><img src="images/<?php print $result['path']?>"></li>
-					<?php } ?>
-					</ul>
-				</li>
+				<?php } ?>
 			</ul>
 		</div> <!-- end edit results -->
 		</div>

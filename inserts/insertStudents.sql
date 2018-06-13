@@ -24,3 +24,6 @@ values (801150264,'Tatiana Alvarez',null);
 
 insert into Students (sid,sname,email) 
 values (845145568,'Ayeisha Oppenheimer',null);
+
+insert into Students (sid,sname,email)
+values (804099240,'Laura Vicente',null);
