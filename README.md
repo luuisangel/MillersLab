@@ -20,6 +20,8 @@ Este sistema de manejo de datos provee una interfaz web para mantener los result
 
 La página *HOME* provee una lista de los proyectos que se trabajan en el laboratorio. Estos proyectos pueden ser presionados para expandir una lista con las técnicas utilizadas para obtener los resultados correspondientes de cada proyecto. Estas técnicas también pueden ser presionadas para expandir una lista de imágenes que corresponden a resultados.
 
+La página *MANAGE DATA* provee una forma para someter resultados en formato de imagen, así como el nombre del estudiante que realizó el experimento, el anticuerpo que utilizó, para qué proyecto lo realizó y en qué fecha lo hizo. Además provee una herramienta para que permite editar los resultados por estudiante, en esta se permite editar el nombre de las imágenes, así como eliminar imágenes.
+ 
 ## Autor
 
 * **Luis A. Quiñones** 
