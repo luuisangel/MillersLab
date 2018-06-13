@@ -76,32 +76,25 @@
 			<div class="box-project-techniques" style="display: none">
 				<h5>Results</h5>
 				<ul>
+					<?php
+					$requestTechniques = sprintf("select technique from Techniques");
+					$techniques = mysqli_query($dbconnection, $requestTechniques);
+
+					while($technique = mysqli_fetch_array($techniques,MYSQL_ASSOC)){ ?>
 					<li>
 						<div class="technique">
-							<h5><span class="fas fa-caret-right"></span> Immuno</h5>
+							<h5><span class="fas fa-caret-right"></span> <?php print $technique['technique'] ?></h5>
 						</div>
 						<ul class="results" style="display: none">
 						<?php
-						$requestResults = sprintf("select path from Results where technique='Immuno' and pid=%s",$project['pid']);
+						$requestResults = sprintf("select path from Results where technique='%s' and pid=%s",$technique['technique'],$project['pid']);
 						$results = mysqli_query($dbconnection, $requestResults);
 						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
 							<li><img src="images/<?php print $result['path']?>"></li>
 						<?php } ?>
 						</ul>
 					</li>
-					<li>
-						<div class="technique">
-							<h5><span class="fas fa-caret-right"></span> Backfill</h5>
-						</div>
-						<ul class="results" style="display: none">
-						<?php
-						$requestResults = sprintf("select path from Results where technique='Backfill' and pid=%s", $project['pid']);
-						$results = mysqli_query($dbconnection, $requestResults);
-						while($result = mysqli_fetch_array($results,MYSQL_ASSOC)){ ?>
-							<li><img src="images/<?php print $result['path']?>"></li>
-						<?php } ?>
-						</ul>
-					</li>
+					<?php } ?>
 				</ul>
 			</div>
 		</div> <!-- end box-project -->
